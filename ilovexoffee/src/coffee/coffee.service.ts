@@ -1,17 +1,23 @@
 import {
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
+  Scope,
 } from '@nestjs/common';
 import { Coffee } from './coffee.entity';
 import { CreateCoffeeDto } from './dto/create-coffee.dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto/update-coffee.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
+import { Connection, In, Repository } from 'typeorm';
 import { Flavor } from './flavor.entity.ts';
 import { PaginationQueryDto } from 'src/common/dto/pagination-query.dto/pagination-query.dto';
 import { Event } from '../events/entities/event.entities';
+import { COFFEE_BRANDS } from './CoffeeBarands';
+import { ConfigService } from '@nestjs/config';
+//@Injectable({scope: Scope.TRANSIENT})
+//@Injectable({scope: Scope.TRANSIENT})
 @Injectable()
 export class CoffeeService {
   constructor(
@@ -20,7 +26,9 @@ export class CoffeeService {
     @InjectRepository(Flavor)
     private readonly flavorRepository: Repository<Flavor>,
     private readonly connection: Connection,
-  ) {}
+    @Inject(COFFEE_BRANDS) private readonly coffeeBrands: string[],
+    private readonly configService: ConfigService)
+   { console.log(configService.get('DATABASE_HOST'));}
 
   findAll(paginationQueryDto: PaginationQueryDto) {
     const { limit, offset } = paginationQueryDto;
@@ -75,9 +83,7 @@ export class CoffeeService {
   }
 
   private async preloadFlavorByName(name: string): Promise<Flavor> {
-    const existingFlavor = await this.flavorRepository.findOne({
-      where: { name },
-    });
+    const existingFlavor = await this.flavorRepository.findOne({ where: { name} });
     if (existingFlavor) {
       return existingFlavor;
     }

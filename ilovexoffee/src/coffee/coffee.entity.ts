@@ -14,7 +14,6 @@ export class Coffee {
 
     @Column({default: 0})
     recommendations: number;
-
     @JoinTable()
     @ManyToMany(
         type => Flavor, 
