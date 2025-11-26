@@ -27,12 +27,12 @@ export class CoffeeService {
     @InjectRepository(Flavor)
     private readonly flavorRepository: Repository<Flavor>,
     private readonly connection: Connection,
-    @Inject(COFFEE_BRANDS) private readonly coffeeBrands: string[],
+    @Inject(COFFEE_BRANDS) private readonly coffeeBrands: string[])
   // private readonly configService: ConfigService),
-    @Inject(coffeesConfig.KEY)
-    private readonly coffeesConfiguration: config.ConfigType<typeof coffeesConfig>)
+   /*  @Inject(coffeesConfig.KEY)
+    private readonly coffeesConfiguration: config.ConfigType<typeof coffeesConfig>) */
    { /* console.log(configService.get('DATABASE_HOST')); */
-    console.log(coffeesConfiguration.brands);
+  //  console.log(coffeesConfiguration.brands);
    }
 
   findAll(paginationQueryDto: PaginationQueryDto) {

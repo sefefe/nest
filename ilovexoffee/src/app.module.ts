@@ -1,4 +1,4 @@
-import { Controller, Module } from '@nestjs/common';
+import { Controller, Module, ValidationPipe } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CoffeesModule } from './coffee/coffees.module';
@@ -10,6 +10,9 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import Joi from '@hapi/joi';
 import appConfig from './app.config';
+import { APP_GUARD, APP_PIPE } from '@nestjs/core';
+import { ApiKeyGuard } from './common/guards/api-key.guard';
+import { CommonModule } from './common/common.module';
 
 @Module({
 
@@ -47,8 +50,8 @@ import appConfig from './app.config';
       })      
     ,
     
-    CoffeesModule, CofferRatingModule, DatabaseModule],
+    CoffeesModule, CofferRatingModule, DatabaseModule,CommonModule],
   controllers: [AppController],
-  providers: [AppService, CoffeeRatingService],
+  providers: [AppService, CoffeeRatingService,{provide: APP_PIPE, useClass: ValidationPipe  }],
 })
 export class AppModule {}
